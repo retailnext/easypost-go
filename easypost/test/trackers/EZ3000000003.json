@@ -1,0 +1,64 @@
+{
+  "id": "trk_1e8dfb6598944444836f10883fa2c071",
+  "object": "Tracker",
+  "mode": "test",
+  "tracking_code": "EZ1000000001",
+  "status": "pre_transit",
+  "status_detail": "unknown",
+  "created_at": "2019-05-16T12:03:54Z",
+  "updated_at": "2019-05-16T12:03:54Z",
+  "signed_by": null,
+  "weight": 17.6,
+  "est_delivery_date": "2019-05-16T12:03:54Z",
+  "shipment_id": null,
+  "carrier": "USPS",
+  "tracking_details": [
+    {
+      "object": "TrackingDetail",
+      "message": "Pre-Shipment information received",
+      "description": null,
+      "status": "pre_transit",
+      "status_detail": null,
+      "datetime": "2019-04-16T12:03:54Z",
+      "source": "EasyPost",
+      "carrier_code": null,
+      "tracking_location": {
+        "object": "TrackingLocation",
+        "city": null,
+        "state": null,
+        "country": null,
+        "zip": null
+      }
+    },
+    {
+      "object": "TrackingDetail",
+      "message": "Shipping label created",
+      "description": null,
+      "status": "pre_transit",
+      "status_detail": null,
+      "datetime": "2019-04-17T06:52:54Z",
+      "source": "EasyPost",
+      "carrier_code": null,
+      "tracking_location": {
+        "object": "TrackingLocation",
+        "city": null,
+        "state": null,
+        "country": null,
+        "zip": null
+      }
+    }
+  ],
+  "carrier_detail": null,
+  "finalized": true,
+  "is_return": false,
+  "public_url": "https://track.easypost.com/djE6dHJrXzFlOGRmYjY1OTg5NDQ0NDQ4MzZmMTA4ODNmYTJjMDcx",
+  "fees": [
+    {
+      "object": "Fee",
+      "type": "TrackerFee",
+      "amount": "0.00000",
+      "charged": false,
+      "refunded": false
+    }
+  ]
+}
