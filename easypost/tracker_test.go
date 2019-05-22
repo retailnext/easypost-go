@@ -28,12 +28,12 @@ var (
 
 func setup() {
 	m := http.NewServeMux()
-	m.HandleFunc("/trackers", getTrackers)
+	m.HandleFunc("/trackers", getTestTrackers)
 	testServer = httptest.NewServer(m)
 	apiURL = testServer.URL
 }
 
-func readTrackerFile(trackingCode string) ([]byte, error) {
+func readTestTrackerFile(trackingCode string) ([]byte, error) {
 	f, err := os.Open(path.Join("./test/trackers", fmt.Sprintf("%s.json", strings.ToUpper(trackingCode))))
 	if err != nil {
 		return nil, err
@@ -42,7 +42,7 @@ func readTrackerFile(trackingCode string) ([]byte, error) {
 	return ioutil.ReadAll(f)
 }
 
-func getTrackers(w http.ResponseWriter, r *http.Request) {
+func getTestTrackers(w http.ResponseWriter, r *http.Request) {
 	trackingCode := r.FormValue("tracker[tracking_code]")
 	switch trackingCode {
 	case paymentError.Error():
@@ -53,7 +53,7 @@ func getTrackers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	b, err := readTrackerFile(trackingCode)
+	b, err := readTestTrackerFile(trackingCode)
 	if err != nil {
 		if os.IsNotExist(err) {
 			w.WriteHeader(http.StatusUnprocessableEntity)
@@ -79,7 +79,7 @@ func TestCreateTracker(t *testing.T) {
 	setup()
 
 	trackingCode := "EZ3000000003"
-	b, err := readTrackerFile(trackingCode)
+	b, err := readTestTrackerFile(trackingCode)
 	if err != nil {
 		t.Fatalf("error reading file: %s", err)
 	}

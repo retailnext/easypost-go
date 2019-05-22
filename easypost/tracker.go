@@ -40,7 +40,7 @@ func (c Carrier) String() string { return string(c) }
 
 type Tracker struct {
 	ID              string            `json:"id"`
-	Object          string            `json:"object"`
+	Object          RecordType        `json:"object"`
 	Mode            string            `json:"mode"`
 	TrackingCode    string            `json:"tracking_code"`
 	Status          TrackerStatus     `json:"status"`
@@ -58,15 +58,15 @@ type Tracker struct {
 }
 
 type Fee struct {
-	Object   string `json:"object"`
-	Type     string `json:"type"`
-	Amount   string `json:"amount"`
-	Charged  bool   `json:"charged"`
-	Refunded bool   `json:"refunded"`
+	Object   RecordType `json:"object"`
+	Type     string     `json:"type"`
+	Amount   string     `json:"amount"`
+	Charged  bool       `json:"charged"`
+	Refunded bool       `json:"refunded"`
 }
 
 type TrackingDetails struct {
-	Object           string           `json:"object"`
+	Object           RecordType       `json:"object"`
 	Message          string           `json:"message"`
 	Status           TrackerStatus    `json:"status"`
 	Datetime         time.Time        `json:"datetime"`
@@ -75,15 +75,15 @@ type TrackingDetails struct {
 }
 
 type TrackingLocation struct {
-	Object  string `json:"object"`
-	City    string `json:"city"`
-	State   string `json:"state"`
-	Country string `json:"country"`
-	Zip     string `json:"zip"`
+	Object  RecordType `json:"object"`
+	City    string     `json:"city"`
+	State   string     `json:"state"`
+	Country string     `json:"country"`
+	Zip     string     `json:"zip"`
 }
 
 type CarrierDetails struct {
-	Object                      string            `json:"object"`
+	Object                      RecordType        `json:"object"`
 	Service                     string            `json:"service"`
 	ContainerType               string            `json:"container_type"`
 	EstDeliveryDateLocal        *time.Time        `json:"est_delivery_date_local,omitempty"`

@@ -8,6 +8,8 @@
 
 package easypost
 
+import "fmt"
+
 var (
 	paymentError      PaymentRequiredError
 	unauthorizedError UnauthorizedError
@@ -47,4 +49,12 @@ type ErrorResponse struct {
 type FieldError struct {
 	Field   string `json:"field"`
 	Message string `json:"message"`
+}
+
+type NotSupportedRecordError struct {
+	recordType RecordType
+}
+
+func (e NotSupportedRecordError) Error() string {
+	return fmt.Sprintf("not supported record: %s", e.recordType)
 }
