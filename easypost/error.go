@@ -40,15 +40,19 @@ func (e ProcessingError) Details() map[string]string {
 	return e.details
 }
 
-type ErrorResponse struct {
+type ErrorMessage struct {
 	Code    string       `json:"code"`
 	Message string       `json:"message"`
-	Errors  []FieldError `json:"errors"`
+	FieldErrors  []FieldError `json:"errors"`
 }
 
 type FieldError struct {
 	Field   string `json:"field"`
 	Message string `json:"message"`
+}
+
+type ErrorResponse struct {
+	Error ErrorMessage `json:"error"`
 }
 
 type NotSupportedRecordError struct {

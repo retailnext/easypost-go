@@ -89,12 +89,13 @@ func (c Client) processErrorResponse(response *http.Response) error {
 	if err := json.Unmarshal(b, &errorResponse); err != nil {
 		return fmt.Errorf("error parse not success response: %s", err)
 	}
-	details := make(map[string]string, len(errorResponse.Errors))
-	for _, e := range errorResponse.Errors {
+	errorMessage := errorResponse.Error
+	details := make(map[string]string, len(errorMessage.FieldErrors))
+	for _, e := range errorMessage.FieldErrors {
 		details[e.Field] = e.Message
 	}
 	return ProcessingError{
-		msg:     errorResponse.Message,
+		msg:     errorMessage.Message,
 		details: details,
 	}
 }

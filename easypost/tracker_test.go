@@ -58,11 +58,13 @@ func getTestTrackers(w http.ResponseWriter, r *http.Request) {
 		if os.IsNotExist(err) {
 			w.WriteHeader(http.StatusUnprocessableEntity)
 			json.NewEncoder(w).Encode(ErrorResponse{
-				Message: "not_found",
-				Errors: []FieldError{
-					{
-						Field:   "tracking_code",
-						Message: "not_found",
+				Error: ErrorMessage{
+					Message: "not found",
+					FieldErrors: []FieldError{
+						{
+							Field:   "tracking_code",
+							Message: "not found",
+						},
 					},
 				},
 			})
@@ -97,9 +99,13 @@ func TestCreateTracker(t *testing.T) {
 		t.Fatalf("trackers: \nexpected %+v\n     got %+v", &expectedTracker, gotTracker)
 	}
 
+	expectedError := ProcessingError{
+		msg:     "not found",
+		details: map[string]string{"tracking_code": "not found"},
+	}
 	_, err = testClient.GetTracker("EZ3000000002", "")
-	if _, ok := err.(ProcessingError); !ok {
-		t.Fatalf("error expected: %T (%s)", err, err)
+	if !reflect.DeepEqual(expectedError, err) {
+		t.Fatalf("error:\nexpected: %v \ngot: %v", expectedError, err)
 	}
 
 	_, err = testClient.GetTracker(paymentError.Error(), "")
