@@ -8,7 +8,10 @@
 
 package easypost
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 var (
 	paymentError      PaymentRequiredError
@@ -28,22 +31,23 @@ func (e PaymentRequiredError) Error() string {
 }
 
 type ProcessingError struct {
+	code    string
 	msg     string
-	details map[string]string
+	details json.RawMessage
 }
 
 func (e ProcessingError) Error() string {
 	return e.msg
 }
 
-func (e ProcessingError) Details() map[string]string {
-	return e.details
+func (e ProcessingError) Details(target interface{}) error {
+	return json.Unmarshal(e.details, target)
 }
 
-type ErrorMessage struct {
-	Code    string       `json:"code"`
-	Message string       `json:"message"`
-	FieldErrors  []FieldError `json:"errors"`
+type errorMessage struct {
+	Code        string          `json:"code"`
+	Message     string          `json:"message"`
+	FieldErrors json.RawMessage `json:"errors"`
 }
 
 type FieldError struct {
@@ -52,7 +56,7 @@ type FieldError struct {
 }
 
 type ErrorResponse struct {
-	Error ErrorMessage `json:"error"`
+	Error errorMessage `json:"error"`
 }
 
 type NotSupportedRecordError struct {

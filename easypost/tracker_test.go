@@ -10,72 +10,9 @@ package easypost
 
 import (
 	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"net/http"
-	"net/http/httptest"
-	"os"
-	"path"
 	"reflect"
-	"strings"
 	"testing"
 )
-
-var (
-	testServer *httptest.Server
-	testClient = NewClient("")
-)
-
-func setup() {
-	m := http.NewServeMux()
-	m.HandleFunc("/trackers", getTestTrackers)
-	testServer = httptest.NewServer(m)
-	apiURL = testServer.URL
-}
-
-func readTestTrackerFile(trackingCode string) ([]byte, error) {
-	f, err := os.Open(path.Join("./test/trackers", fmt.Sprintf("%s.json", strings.ToUpper(trackingCode))))
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
-	return ioutil.ReadAll(f)
-}
-
-func getTestTrackers(w http.ResponseWriter, r *http.Request) {
-	trackingCode := r.FormValue("tracker[tracking_code]")
-	switch trackingCode {
-	case paymentError.Error():
-		w.WriteHeader(http.StatusPaymentRequired)
-		return
-	case unauthorizedError.Error():
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
-
-	b, err := readTestTrackerFile(trackingCode)
-	if err != nil {
-		if os.IsNotExist(err) {
-			w.WriteHeader(http.StatusUnprocessableEntity)
-			json.NewEncoder(w).Encode(ErrorResponse{
-				Error: ErrorMessage{
-					Message: "not found",
-					FieldErrors: []FieldError{
-						{
-							Field:   "tracking_code",
-							Message: "not found",
-						},
-					},
-				},
-			})
-		} else {
-			w.WriteHeader(http.StatusInternalServerError)
-		}
-		return
-	}
-	w.WriteHeader(http.StatusCreated)
-	w.Write(b)
-}
 
 func TestCreateTracker(t *testing.T) {
 	setup()
@@ -99,9 +36,19 @@ func TestCreateTracker(t *testing.T) {
 		t.Fatalf("trackers: \nexpected %+v\n     got %+v", &expectedTracker, gotTracker)
 	}
 
+	b, err = json.Marshal([]FieldError{
+		{
+			Field:   "tracking_code",
+			Message: "not found",
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	expectedError := ProcessingError{
 		msg:     "not found",
-		details: map[string]string{"tracking_code": "not found"},
+		details: b,
 	}
 	_, err = testClient.GetTracker("EZ3000000002", "")
 	if !reflect.DeepEqual(expectedError, err) {
