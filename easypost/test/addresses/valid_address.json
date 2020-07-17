@@ -1,0 +1,32 @@
+{
+  "id": "adr_9fd4e689a7e5444a88c1bca671df552b",
+  "object": "Address",
+  "created_at": "2020-07-16T13:05:15Z",
+  "updated_at": "2020-07-16T13:05:15Z",
+  "name": null,
+  "company": "EASYPOST",
+  "street1": "417 MONTGOMERY ST STE 500",
+  "street2": "417 MONTGOMERY STREET",
+  "city": "SAN FRANCISCO",
+  "state": "CA",
+  "zip": "94104-1100",
+  "country": "US",
+  "phone": "4151234567",
+  "email": null,
+  "mode": "test",
+  "carrier_facility": null,
+  "residential": false,
+  "federal_tax_id": null,
+  "state_tax_id": null,
+  "verifications": {
+    "delivery": {
+      "success": true,
+      "errors":[],
+      "details": {
+        "latitude": 37.79298,
+        "longitude": -122.40288,
+        "time_zone": "America/Los_Angeles"
+      }
+    }
+  }
+}

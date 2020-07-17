@@ -9,6 +9,7 @@
 package easypost
 
 const (
+	RecordTypeAddress          RecordType = "Address"
 	RecordTypeCarrierDetail    RecordType = "CarrierDetail"
 	RecordTypeEvent            RecordType = "Event"
 	RecordTypeFee              RecordType = "Fee"

@@ -1,0 +1,20 @@
+{
+  "error": {
+    "code": "ADDRESS.VERIFY.FAILURE",
+    "message": "Unable to verify address.",
+    "errors": [
+      {
+        "suggestion": null,
+        "code": "E.ADDRESS.NOT_FOUND",
+        "field": "address",
+        "message": "Address not found"
+      },
+      {
+        "suggestion": null,
+        "code": "E.HOUSE_NUMBER.MISSING",
+        "field": "street1",
+        "message": "House number is missing"
+      }
+    ]
+  }
+}

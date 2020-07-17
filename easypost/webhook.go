@@ -1,4 +1,4 @@
-// Copyright 2019 RetailNext, Inc.
+// Copyright 2020 RetailNext, Inc.
 //
 // Licensed under the BSD 3-Clause License (the "License");
 // you may not use this file except in compliance with the License.
@@ -52,6 +52,8 @@ func (e Event) GetResult() (interface{}, error) {
 	switch record.Object {
 	case RecordTypeTracker:
 		result = &Tracker{}
+	case RecordTypeAddress:
+		result = &Address{}
 	default:
 		return nil, NotSupportedRecordError{record.Object}
 	}

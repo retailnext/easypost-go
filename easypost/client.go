@@ -21,11 +21,27 @@ var apiURL = "https://api.easypost.com/v2"
 
 const (
 	trackerURL = "trackers"
+	addressURL = "addresses"
 )
 
+type Logger interface {
+	Printf(format string, v ...interface{})
+}
+
 type Client struct {
-	c      http.Client
-	apiKey string
+	c           http.Client
+	apiKey      string
+	errorLogger Logger
+}
+
+func (c *Client) SetErrorLog(l Logger) {
+	c.errorLogger = l
+}
+
+func (c Client) errorf(f string, attr ...interface{}) {
+	if c.errorLogger != nil {
+		c.errorLogger.Printf(f, attr)
+	}
 }
 
 func NewClient(apiKey string) *Client {
@@ -63,12 +79,18 @@ func (c *Client) post(objectURL string, parameters url.Values) ([]byte, error) {
 	if response.StatusCode == http.StatusOK || response.StatusCode == http.StatusCreated {
 		body, err := ioutil.ReadAll(response.Body)
 		if err != nil {
-			return nil, fmt.Errorf("error read response: %s", err)
+			err := fmt.Errorf("error read response: %s", err)
+			c.errorf("%s\n", err)
+			return nil, err
 		}
 		return body, nil
 	}
 
-	return nil, c.processErrorResponse(response)
+	err = c.processErrorResponse(response)
+	if err != nil {
+		c.errorf("%s\n", err)
+	}
+	return nil, err
 }
 
 func (c Client) processErrorResponse(response *http.Response) error {
@@ -83,19 +105,18 @@ func (c Client) processErrorResponse(response *http.Response) error {
 
 	b, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		return fmt.Errorf("error reading not success reponse: %s", err)
+		return fmt.Errorf("error reading error reponse: %s", err)
 	}
+	c.errorf("error response body: %s\n", b)
+
 	errorResponse := ErrorResponse{}
 	if err := json.Unmarshal(b, &errorResponse); err != nil {
 		return fmt.Errorf("error parse not success response: %s", err)
 	}
 	errorMessage := errorResponse.Error
-	details := make(map[string]string, len(errorMessage.FieldErrors))
-	for _, e := range errorMessage.FieldErrors {
-		details[e.Field] = e.Message
-	}
 	return ProcessingError{
 		msg:     errorMessage.Message,
-		details: details,
+		code:    errorMessage.Code,
+		details: errorMessage.FieldErrors,
 	}
 }
