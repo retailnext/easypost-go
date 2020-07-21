@@ -18,6 +18,8 @@ var (
 	unauthorizedError UnauthorizedError
 )
 
+type ErrorCode string
+
 type UnauthorizedError struct{}
 
 func (e UnauthorizedError) Error() string {

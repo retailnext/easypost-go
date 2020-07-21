@@ -58,7 +58,7 @@ type AddressVerificationError struct {
 	Message    string  `json:"message"`
 	Suggestion *string `json:"suggestion"`
 	Field      string  `json:"field"`
-	Code       string  `json:"code"`
+	Code       ErrorCode  `json:"code"`
 }
 
 type VerificationType string
