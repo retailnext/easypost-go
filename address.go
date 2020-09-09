@@ -55,10 +55,10 @@ func (a Address) Geocode() (float32, float32, bool) {
 }
 
 type AddressVerificationError struct {
-	Message    string  `json:"message"`
-	Suggestion *string `json:"suggestion"`
-	Field      string  `json:"field"`
-	Code       ErrorCode  `json:"code"`
+	Message    string    `json:"message"`
+	Suggestion *string   `json:"suggestion"`
+	Field      string    `json:"field"`
+	Code       ErrorCode `json:"code"`
 }
 
 type VerificationType string
@@ -74,9 +74,9 @@ type Verifications struct {
 }
 
 type Verification struct {
-	Success bool                 `json:"success"`
-	Errors  []FieldError         `json:"errors"`
-	Details *VerificationDetails `json:"details"`
+	Success bool                       `json:"success"`
+	Errors  []AddressVerificationError `json:"errors"`
+	Details *VerificationDetails       `json:"details"`
 }
 
 type VerificationDetails struct {
