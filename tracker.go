@@ -1,4 +1,4 @@
-// Copyright 2019 RetailNext, Inc.
+// Copyright 2022 RetailNext, Inc.
 //
 // Licensed under the BSD 3-Clause License (the "License");
 // you may not use this file except in compliance with the License.
@@ -46,15 +46,15 @@ type Tracker struct {
 	Status          TrackerStatus     `json:"status"`
 	SignedBy        string            `json:"signed_by"`
 	Weight          float64           `json:"weight"`
-	EstDeliveryDate *time.Time        `json:"est_delivery_date"`
+	EstDeliveryDate *DateTime         `json:"est_delivery_date"`
 	ShipmentID      string            `json:"shipment_id"`
 	Carrier         string            `json:"carrier"`
 	TrackingDetails []TrackingDetails `json:"tracking_details"`
 	CarrierDetail   CarrierDetails    `json:"carrier_detail"`
 	PublicURL       string            `json:"public_url"`
 	Fees            []Fee             `json:"fees"`
-	CreatedAt       time.Time         `json:"created_at"`
-	UpdatedAt       time.Time         `json:"updated_at"`
+	CreatedAt       DateTime          `json:"created_at"`
+	UpdatedAt       DateTime          `json:"updated_at"`
 }
 
 type Fee struct {
@@ -69,7 +69,7 @@ type TrackingDetails struct {
 	Object           RecordType       `json:"object"`
 	Message          string           `json:"message"`
 	Status           TrackerStatus    `json:"status"`
-	Datetime         time.Time        `json:"datetime"`
+	Datetime         DateTime         `json:"datetime"`
 	Source           string           `json:"source"`
 	TrackingLocation TrackingLocation `json:"tracking_location"`
 }
@@ -86,26 +86,26 @@ type CarrierDetails struct {
 	Object                      RecordType        `json:"object"`
 	Service                     string            `json:"service"`
 	ContainerType               string            `json:"container_type"`
-	EstDeliveryDateLocal        *time.Time        `json:"est_delivery_date_local,omitempty"`
-	EstDeliveryTimeLocal        *time.Time        `json:"est_delivery_time_local,omitempty"`
+	EstDeliveryDateLocal        *DateTime         `json:"est_delivery_date_local,omitempty"`
+	EstDeliveryTimeLocal        *DateTime         `json:"est_delivery_time_local,omitempty"`
 	OriginLocation              string            `json:"origin_location"`
 	OriginTrackingLocation      *TrackingLocation `json:"origin_tracking_location,omitempty"`
 	DestinationLocation         string            `json:"destination_location"`
 	DestinationTrackingLocation *TrackingLocation `json:"destination_tracking_location,omitempty"`
-	GuaranteedDeliveryDate      *time.Time        `json:"guaranteed_delivery_date,omitempty"`
+	GuaranteedDeliveryDate      *DateTime         `json:"guaranteed_delivery_date,omitempty"`
 	AlternateIdentifier         string            `json:"alternate_identifier"`
-	InitialDeliveryAttempt      time.Time         `json:"initial_delivery_attempt"`
+	InitialDeliveryAttempt      DateTime          `json:"initial_delivery_attempt"`
 }
 
 func (c CarrierDetails) EstimatedDeliveryTime() *time.Time {
 	if c.EstDeliveryDateLocal == nil {
 		return nil
 	}
-	date := *c.EstDeliveryDateLocal
+	t := c.EstDeliveryDateLocal.Time
 	if c.EstDeliveryTimeLocal != nil {
-		date = time.Date(date.Year(), date.Month(), date.Day(), c.EstDeliveryTimeLocal.Hour(), c.EstDeliveryTimeLocal.Minute(), 0, 0, time.UTC)
+		t = time.Date(t.Year(), t.Month(), t.Day(), c.EstDeliveryTimeLocal.Hour(), c.EstDeliveryTimeLocal.Minute(), 0, 0, time.UTC)
 	}
-	return &date
+	return &t
 }
 
 func (c *Client) GetTracker(trackingCode string, carrier Carrier) (*Tracker, error) {

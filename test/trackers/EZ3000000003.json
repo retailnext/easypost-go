@@ -48,7 +48,26 @@
       }
     }
   ],
-  "carrier_detail": null,
+  "carrier_detail": {
+    "object": "CarrierDetail",
+    "service": "UPS 2nd Day Air",
+    "container_type": null,
+    "est_delivery_date_local": "2022-12-08",
+    "est_delivery_time_local": null,
+    "origin_location": "Test 1",
+    "origin_tracking_location": {
+      "object": "TrackingLocation",
+      "city": "LA",
+      "state": "CA",
+      "country": "US",
+      "zip": null
+    },
+    "destination_location": "NY US",
+    "destination_tracking_location": null,
+    "guaranteed_delivery_date": null,
+    "alternate_identifier": null,
+    "initial_delivery_attempt": null
+  },
   "finalized": true,
   "is_return": false,
   "public_url": "https://track.easypost.com/djE6dHJrXzFlOGRmYjY1OTg5NDQ0NDQ4MzZmMTA4ODNmYTJjMDcx",
