@@ -1,4 +1,4 @@
-// Copyright 2020 RetailNext, Inc.
+// Copyright 2022 RetailNext, Inc.
 //
 // Licensed under the BSD 3-Clause License (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,7 +11,7 @@ package easypost
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -38,7 +38,7 @@ func readTestTrackerFile(trackingCode string) ([]byte, error) {
 		return nil, err
 	}
 	defer f.Close()
-	return ioutil.ReadAll(f)
+	return io.ReadAll(f)
 }
 
 func getTestTrackers(w http.ResponseWriter, r *http.Request) {
@@ -103,7 +103,7 @@ func validateTestAddress(w http.ResponseWriter, r *http.Request) {
 	}
 	defer f.Close()
 
-	b, err := ioutil.ReadAll(f)
+	b, err := io.ReadAll(f)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
