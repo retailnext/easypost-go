@@ -12,6 +12,7 @@ import (
 	"encoding/json"
 	"reflect"
 	"testing"
+	"time"
 )
 
 func TestCreateTracker(t *testing.T) {
@@ -63,5 +64,19 @@ func TestCreateTracker(t *testing.T) {
 	_, err = testClient.GetTracker(unauthorizedError.Error(), "")
 	if _, ok := err.(UnauthorizedError); !ok {
 		t.Fatalf("unauthorized error expected: %T (%s)", err, err)
+	}
+}
+
+func TestJSONCarrierDetails(t *testing.T) {
+	raw := []byte(`{
+	  "est_delivery_date_local": "2022-12-08",
+	  "est_delivery_time_local": "20:11:53"
+	}`)
+	var c CarrierDetails
+	if err := json.Unmarshal(raw, &c); err != nil {
+		t.Fatalf("error unmarshalling details: %s", err)
+	}
+	if c.EstimatedDeliveryTime() == nil || !time.Date(2022, 12, 8, 20, 11, 53, 0, time.UTC).Equal(*c.EstimatedDeliveryTime()) {
+		t.Errorf("unexpected time, expected: 2022-12-08 20:11:53, got: %s", c.EstimatedDeliveryTime())
 	}
 }

@@ -26,3 +26,23 @@ func (d *DateTime) UnmarshalJSON(data []byte) error {
 	d.Time = t
 	return nil
 }
+
+type localTime struct {
+	h, m, s int
+}
+
+func (d *localTime) UnmarshalJSON(data []byte) error {
+	s := string(data)
+	if string(data) == "null" {
+		return nil
+	}
+
+	t, err := time.Parse(`"15:04:05"`, s)
+	if err != nil {
+		return err
+	}
+	d.h = t.Hour()
+	d.m = t.Minute()
+	d.s = t.Second()
+	return nil
+}
