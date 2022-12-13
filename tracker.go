@@ -86,8 +86,8 @@ type CarrierDetails struct {
 	Object                      RecordType        `json:"object"`
 	Service                     string            `json:"service"`
 	ContainerType               string            `json:"container_type"`
-	EstDeliveryDateLocal        *DateTime         `json:"est_delivery_date_local,omitempty"`
-	EstDeliveryTimeLocal        *DateTime         `json:"est_delivery_time_local,omitempty"`
+	estDeliveryDateLocal        *DateTime         `json:"est_delivery_date_local,omitempty"`
+	estDeliveryTimeLocal        *localTime        `json:"est_delivery_time_local,omitempty"`
 	OriginLocation              string            `json:"origin_location"`
 	OriginTrackingLocation      *TrackingLocation `json:"origin_tracking_location,omitempty"`
 	DestinationLocation         string            `json:"destination_location"`
@@ -97,13 +97,50 @@ type CarrierDetails struct {
 	InitialDeliveryAttempt      DateTime          `json:"initial_delivery_attempt"`
 }
 
+type carrierDetails struct {
+	Object                      RecordType        `json:"object"`
+	Service                     string            `json:"service"`
+	ContainerType               string            `json:"container_type"`
+	EstDeliveryDateLocal        *DateTime         `json:"est_delivery_date_local,omitempty"`
+	EstDeliveryTimeLocal        *localTime        `json:"est_delivery_time_local,omitempty"`
+	OriginLocation              string            `json:"origin_location"`
+	OriginTrackingLocation      *TrackingLocation `json:"origin_tracking_location,omitempty"`
+	DestinationLocation         string            `json:"destination_location"`
+	DestinationTrackingLocation *TrackingLocation `json:"destination_tracking_location,omitempty"`
+	GuaranteedDeliveryDate      *DateTime         `json:"guaranteed_delivery_date,omitempty"`
+	AlternateIdentifier         string            `json:"alternate_identifier"`
+	InitialDeliveryAttempt      DateTime          `json:"initial_delivery_attempt"`
+}
+
+func (c *CarrierDetails) UnmarshalJSON(data []byte) error {
+	var d carrierDetails
+	if err := json.Unmarshal(data, &d); err != nil {
+		return err
+	}
+	*c = CarrierDetails{
+		Object:                      d.Object,
+		Service:                     d.Service,
+		ContainerType:               d.ContainerType,
+		estDeliveryTimeLocal:        d.EstDeliveryTimeLocal,
+		estDeliveryDateLocal:        d.EstDeliveryDateLocal,
+		OriginLocation:              d.OriginLocation,
+		OriginTrackingLocation:      d.OriginTrackingLocation,
+		DestinationLocation:         d.DestinationLocation,
+		DestinationTrackingLocation: d.DestinationTrackingLocation,
+		GuaranteedDeliveryDate:      d.GuaranteedDeliveryDate,
+		AlternateIdentifier:         d.AlternateIdentifier,
+		InitialDeliveryAttempt:      d.InitialDeliveryAttempt,
+	}
+	return nil
+}
+
 func (c CarrierDetails) EstimatedDeliveryTime() *time.Time {
-	if c.EstDeliveryDateLocal == nil {
+	if c.estDeliveryDateLocal == nil {
 		return nil
 	}
-	t := c.EstDeliveryDateLocal.Time
-	if c.EstDeliveryTimeLocal != nil {
-		t = time.Date(t.Year(), t.Month(), t.Day(), c.EstDeliveryTimeLocal.Hour(), c.EstDeliveryTimeLocal.Minute(), 0, 0, time.UTC)
+	t := c.estDeliveryDateLocal.Time
+	if c.estDeliveryTimeLocal != nil {
+		t = time.Date(t.Year(), t.Month(), t.Day(), c.estDeliveryTimeLocal.h, c.estDeliveryTimeLocal.m, c.estDeliveryTimeLocal.s, 0, time.UTC)
 	}
 	return &t
 }
