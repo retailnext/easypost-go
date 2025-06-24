@@ -4,7 +4,7 @@
     "config:best-practices",
     ":semanticCommits",
     ":enablePreCommit",
-    "regexManagers:githubActionsVersions"
+    "customManagers:githubActionsVersions"
   ],
   "labels": [
     "dependencies"
